@@ -1,0 +1,33 @@
+language: go
+
+go:
+  - 1.9.x
+  - 1.10.x
+  - 1.11.x
+  - 1.13.x
+  - master
+
+env:
+  - GO111MODULE=on
+  
+install: true
+
+# Fix this by renaming the directory before testing.
+# https://github.com/travis-ci/travis-ci/issues/4573
+script:
+  - export GOBIN="$GOPATH/bin"
+  - export PATH="$PATH:$GOBIN"
+  # Fix dir names
+  - cd $GOPATH/src/github.com/
+  - mv Clivern/Hamster Clivern/hamster
+  - mv Clivern clivern
+  - cd clivern/hamster
+  # Config & execute ci tasks
+  - make install_revive
+  - make ci
+
+matrix:
+  include:
+  allow_failures:
+  - go: 1.9.x
+  - go: 1.10.x
